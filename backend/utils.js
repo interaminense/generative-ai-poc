@@ -72,7 +72,6 @@ function convertToGeminiSchema(schema) {
 
 async function getSchema(table) {
   const schema = await table.getMetadata();
-  console.log(schema);
   const geminiSchema = convertToGeminiSchema(schema[0].schema);
 
   return geminiSchema;
@@ -110,9 +109,28 @@ async function generateSQL({ tableId, schema }, userPrompt) {
   return result.content;
 }
 
-async function executeQuery(query) {
-  console.log("QUERY", query);
+async function generateExplanation(query) {
+  const questions = [
+    new HumanMessage({
+      content: [
+        {
+          type: "text",
+          text: "You are a bigquery expert helping users explain a query that the user provides in context and this will help them understand the meaning of the query. Reply with the text in markdown format only.",
+        },
+        {
+          type: "text",
+          text: query,
+        },
+      ],
+    }),
+  ];
 
+  const result = await model.invoke(questions);
+
+  return result.content;
+}
+
+async function executeQuery(query) {
   let result;
 
   try {
@@ -128,6 +146,7 @@ async function executeQuery(query) {
 module.exports = {
   convertToGeminiSchema,
   executeQuery,
+  generateExplanation,
   generateSQL,
   getSchema,
 };

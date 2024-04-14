@@ -1,6 +1,6 @@
+import React, { useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { Chatbot } from "./components/Chatbot";
-import React, { useState } from "react";
 import { Provider } from "@clayui/core";
 
 const spritemap = "/icons.svg";

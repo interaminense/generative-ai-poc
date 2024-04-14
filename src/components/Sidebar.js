@@ -23,7 +23,7 @@ export function Sidebar({ onChange }) {
       className="sidebar sidebar-dark"
       style={{ width: 500, position: "fixed", height: "100%" }}
     >
-      <div className="sidebar-body">
+      <div className="sidebar-body p-5">
         <h4>Google Cloud Project ID</h4>
         <p>{process.env.REACT_APP_GOOGLE_CLOUD_PROJECT_ID}</p>
 

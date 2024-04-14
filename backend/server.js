@@ -3,7 +3,12 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const { BigQuery } = require("@google-cloud/bigquery");
-const { convertToGeminiSchema, generateSQL, executeQuery } = require("./utils");
+const {
+  convertToGeminiSchema,
+  generateExplanation,
+  generateSQL,
+  executeQuery,
+} = require("./utils");
 
 const dotenv = require("dotenv");
 const path = require("path");
@@ -12,9 +17,7 @@ dotenv.config({ path: path.resolve(__dirname, "../.env") });
 
 const app = express();
 
-app.use(express.json(), bodyParser.urlencoded({ extended: true }));
-
-app.use(cors());
+app.use(cors(), express.json(), bodyParser.urlencoded({ extended: true }));
 
 const projectId = process.env.REACT_APP_PROJECT_ID;
 const datasetId = process.env.REACT_APP_DATASET_ID;
@@ -72,6 +75,22 @@ app.post("/api/bigquery-human-question", async (req, res) => {
     res.json({ result, query });
   } catch (err) {
     res.status(500).json({ errorMessage: err.message, query });
+  }
+});
+
+app.post("/api/bigquery-query-explanation", async (req, res) => {
+  const { query } = req.body;
+
+  if (!query) {
+    return res.status(400).send("Missing required parameter");
+  }
+
+  try {
+    const result = await generateExplanation(query);
+
+    res.json({ result });
+  } catch (err) {
+    res.status(500).json({ errorMessage: err.message });
   }
 });
 

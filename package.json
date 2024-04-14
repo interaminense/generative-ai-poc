@@ -10,6 +10,7 @@
     "@clayui/drop-down": "^3.113.0",
     "@clayui/form": "^3.113.0",
     "@clayui/loading-indicator": "^3.111.0",
+    "@clayui/panel": "^3.113.0",
     "@google-cloud/bigquery": "^7.5.2",
     "@google/generative-ai": "^0.6.0",
     "@langchain/google-genai": "^0.0.11",
@@ -17,9 +18,11 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "marked": "^12.0.1",
     "react": "^16.12.0",
     "react-dom": "16.12",
     "react-scripts": "^5.0.1",
+    "recharts": "^2.12.5",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

@@ -36,7 +36,9 @@ const bigquery = new BigQuery({
 
 const bigqueryToConsultSQL = new BigQuery({
   keyFilename: "keyfile.json",
-  projectId: "home-page-877ff",
+  projectId: process.env.REACT_APP_GOOGLE_CLOUD_PROJECT_ID,
+  datasetId,
+  tableId,
 });
 
 const dataset = bigquery.dataset(datasetId);

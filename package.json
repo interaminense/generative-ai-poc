@@ -1,17 +1,49 @@
 {
-  "name": "chatbot-gemini-nodejs",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
+  "name": "chatbot",
+  "version": "0.1.0",
+  "private": true,
   "dependencies": {
+    "@clayui/alert": "^3.111.0",
+    "@clayui/button": "^3.113.0",
+    "@clayui/core": "^3.113.0",
+    "@clayui/css": "^3.113.0",
+    "@clayui/drop-down": "^3.113.0",
+    "@clayui/form": "^3.113.0",
+    "@clayui/loading-indicator": "^3.111.0",
     "@google-cloud/bigquery": "^7.5.2",
     "@google/generative-ai": "^0.6.0",
     "@langchain/google-genai": "^0.0.11",
-    "dotenv": "^16.4.5"
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "react": "^16.12.0",
+    "react-dom": "16.12",
+    "react-scripts": "^5.0.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

@@ -3,12 +3,14 @@ import ClayButton from "@clayui/button";
 import React from "react";
 const { useEffect, useState } = require("react");
 
+const IP = process.env.REACT_APP_EXTERNAL_IP_ADDRESS || "localhost";
+
 export function Sidebar({ onChange }) {
   const [tableList, setTableList] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/bigquery-table-list")
+    fetch(`http://${IP}:5000/api/bigquery-table-list`)
       .then((response) => response.json())
       .then((data) => {
         setTableList(data);

@@ -7,6 +7,8 @@ import ClayPanel from "@clayui/panel";
 import { marked } from "marked";
 import { ChartRenderer } from "./ChartRenderer";
 
+const IP = process.env.REACT_APP_EXTERNAL_IP_ADDRESS || "localhost";
+
 export function Chatbot({ tableId }) {
   const [userPrompt, setUserPrompt] = useState("");
   const [data, setData] = useState({});
@@ -33,7 +35,7 @@ export function Chatbot({ tableId }) {
           setLoading(true);
 
           const response = await fetch(
-            "http://localhost:5000/api/bigquery-human-question",
+            `http://${IP}:5000/api/bigquery-human-question`,
             {
               method: "POST",
               headers: {
@@ -51,7 +53,7 @@ export function Chatbot({ tableId }) {
           setData(data);
 
           const responseExplainedQuery = await fetch(
-            "http://localhost:5000/api/bigquery-query-explanation",
+            `http://${IP}:5000/api/bigquery-query-explanation`,
             {
               method: "POST",
               headers: {

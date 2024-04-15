@@ -14,6 +14,6 @@ In summary, our application seamlessly integrates powerful technologies to strea
 
 ## Getting Start
 
-1. Start backend on the server folder `node server.js`;
-2. Install frontend packages on the root folder `npm install`;
-3. Star frontend on the root folder `npm start`;
+1. Install packages at root folder `npm install` 
+2. Start backend at server folder `node server.js`;
+4. Star frontend at root folder `npm start`;

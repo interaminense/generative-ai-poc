@@ -3,12 +3,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const { BigQuery } = require("@google-cloud/bigquery");
-const {
-  convertToGeminiSchema,
-  generateExplanation,
-  generateSQL,
-  executeQuery,
-} = require("./utils");
+const { generateExplanation, generateSQL, executeQuery } = require("./utils");
 
 const dotenv = require("dotenv");
 const path = require("path");
@@ -29,10 +24,9 @@ const bigquery = new BigQuery({
 
 async function getSchema(dataset, tableId) {
   const table = dataset.table(tableId);
-  const schema = await table.getMetadata();
-  const geminiSchema = convertToGeminiSchema(schema[0].schema);
+  const result = await table.getMetadata();
 
-  return geminiSchema;
+  return result[0].schema;
 }
 
 app.get("/api/bigquery-table-list", async (req, res) => {
@@ -94,6 +88,10 @@ app.post("/api/bigquery-query-explanation", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("Server listening on port 5000");
-});
+app.listen(
+  5000,
+  process.env.REACT_APP_EXTERNAL_IP_ADDRESS || "localhost",
+  () => {
+    console.log("Server listening on port 5000");
+  }
+);

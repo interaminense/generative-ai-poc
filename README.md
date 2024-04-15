@@ -14,6 +14,12 @@ In summary, our application seamlessly integrates powerful technologies to strea
 
 ## Getting Start
 
-1. Install packages at root folder `npm install` 
+1. Install packages at root folder `npm install`
 2. Start backend at server folder `node server.js`;
-4. Star frontend at root folder `npm start`;
+3. Star frontend at root folder `npm start`;
+
+## Improvements
+
+1. Well-defined prompts are the key to good AI outcomes. Here's an article that can be used as a reference to create suitable prompts for each database: https://answerrocket.com/resources/leveraging-ai-for-sql-code-generation-guide/.
+
+2. To generate graphics, it's necessary to employ a multifaceted process, combining data, visualizations, and interactivity to present information clearly and concisely. We can use Looker as an example for this. [Learn more here](LOOKER.md).

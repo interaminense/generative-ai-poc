@@ -107,9 +107,11 @@ export function Chatbot({ tableId }) {
             expanded
           >
             <ClayPanel.Body>
-              <pre className="bg-light p-4 rounded">
-                {JSON.stringify(data.query, null, 2)}
-              </pre>
+              <pre
+                dangerouslySetInnerHTML={{
+                  __html: marked.parse(data.query),
+                }}
+              />
 
               <div
                 className="explained-query p-3 rounded bg-dark text-light"

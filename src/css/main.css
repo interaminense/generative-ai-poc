@@ -1,3 +1,101 @@
-.explained-query code {
-  color: white;
+@import url("https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap");
+* {
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+}
+
+#chat-content ul,
+#chat-content ol {
+  margin: 0;
+  padding: 0;
+}
+
+#chat-content :not(.sql-node) ul > li:not(.sql-node li),
+#chat-content :not(.sql-node) ol > li:not(.sql-node li) {
+  background-color: #fff;
+  border-color: #88889a;
+  color: #6b6c7e;
+  margin: 10px 0;
+  padding: 10px;
+  font-weight: 600;
+  border-style: solid;
+  border-width: 0.0625rem;
+  list-style: none;
+  border-radius: 4px;
+}
+
+#chat-content :not(.sql-node) ul > li:not(.sql-node li):hover,
+#chat-content :not(.sql-node) ol > li:not(.sql-node li):hover {
+  cursor: pointer;
+  background-color: #f7f8f9;
+  border-color: #88889a;
+  color: #272833;
+}
+
+.thumbnail {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-42px, -6px);
+  background-color: #dbdbdb;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+pre {
+  margin: 0 !important;
+}
+
+.chatbot {
+  left: 0;
+  position: fixed;
+  overflow-x: auto;
+  height: calc(100% - 150px);
+  width: calc(100% - 500px);
+}
+
+.prompt-input {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: white;
+  padding: 50px;
+  width: calc(100% - 500px);
+}
+
+.setup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.sidebar {
+  width: 500px;
+  position: fixed;
+  height: 100%;
+  right: 0;
+  z-index: 2;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: white;
+  z-index: 1;
+  padding: 20px 30px;
+  width: 100%;
+}
+
+.header h1 {
+  font-size: 20px;
+  margin: 0;
 }

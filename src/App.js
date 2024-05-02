@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import { Sidebar } from "./components/Sidebar";
 import { Chatbot } from "./components/Chatbot";
-import { Provider } from "@clayui/core";
+import { ClayIconSpriteContext } from "@clayui/icon";
+import { Header } from "./components/Header";
 
 const spritemap = "/icons.svg";
 
 function App() {
-  const [selectedTableId, setSelectedTableId] = useState(null);
+  const [selectedTable, setSelectedTable] = useState(null);
 
   return (
     <div className="App">
-      <Provider spritemap={spritemap}>
-        <Sidebar onChange={setSelectedTableId} />
-        <Chatbot tableId={selectedTableId} />
-      </Provider>
+      <ClayIconSpriteContext.Provider value={spritemap}>
+        <Header />
+        <Chatbot onTableChange={setSelectedTable} />
+        <Sidebar table={selectedTable} />
+      </ClayIconSpriteContext.Provider>
     </div>
   );
 }

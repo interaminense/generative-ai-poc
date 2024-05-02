@@ -1,153 +1,312 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import ClayButton from "@clayui/button";
 import ClayForm, { ClayInput } from "@clayui/form";
 import ClayAlert from "@clayui/alert";
 import ClayLoadingIndicator from "@clayui/loading-indicator";
-import ClayPanel from "@clayui/panel";
-import { marked } from "marked";
+import { marked, use } from "marked";
 import { ChartRenderer } from "./ChartRenderer";
+import { ENDPOINT } from "../utils/constants";
+import ClayDropDown from "@clayui/drop-down";
+import { Prompts } from "../utils/prompts";
+import ReactDOM from "react-dom";
+import ClayIcon from "@clayui/icon";
 
-const IP = process.env.REACT_APP_EXTERNAL_IP_ADDRESS || "localhost";
+function Setup({ onTableChange }) {
+  const [tableList, setTableList] = useState([]);
 
-export function Chatbot({ tableId }) {
+  function storeTableList(tableList) {
+    localStorage.setItem("tableList", JSON.stringify(tableList));
+  }
+
+  function getTableListFromStorage() {
+    return JSON.parse(localStorage.getItem("tableList"));
+  }
+
+  useEffect(() => {
+    const tableListFromStorage = getTableListFromStorage();
+
+    if (tableListFromStorage) {
+      setTableList(tableListFromStorage);
+    } else {
+      fetch(`${ENDPOINT}/bigquery-table-list`)
+        .then((response) => response.json())
+        .then((data) => {
+          setTableList(data);
+          storeTableList(data.slice(0, 10));
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
+  }, []);
+
+  return (
+    <div className="setup py-10">
+      <h4>Select a table before starting</h4>
+
+      <ClayDropDown
+        trigger={<ClayButton displayType="secondary">select table</ClayButton>}
+        closeOnClick
+      >
+        {tableList.map((table) => (
+          <ClayDropDown.Item
+            key={table.id}
+            value={table.id}
+            onClick={() => {
+              const selectedTable = tableList.find(({ id }) => table.id === id);
+
+              onTableChange(selectedTable);
+            }}
+          >
+            {table.id}
+          </ClayDropDown.Item>
+        ))}
+      </ClayDropDown>
+    </div>
+  );
+}
+
+function Conversation({ onConversationChange, table }) {
   const [userPrompt, setUserPrompt] = useState("");
-  const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
-  const [explainedQuery, setExplainedQuery] = useState("");
+  const [promptList, setPromptList] = useState([]);
+
+  const conversationRef = useRef(null);
+
+  const prompts = useMemo(() => new Prompts(table), [table]);
+
+  useEffect(() => {
+    async function fetch() {
+      setLoading(true);
+
+      const aiPrompt = await prompts.firstPrompt();
+
+      setPromptList([{ value: aiPrompt, name: "AI" }]);
+
+      setLoading(false);
+    }
+
+    fetch();
+  }, [prompts]);
+
+  useEffect(() => {
+    if (loading) return;
+
+    const conversation = conversationRef.current;
+    const sqlNodes = conversation.querySelectorAll("code");
+
+    if (sqlNodes.length) {
+      sqlNodes.forEach(async (sqlNode) => {
+        const dataStructure = sqlNode.textContent;
+
+        const parentNode = sqlNode.parentNode.parentNode;
+        const newNode = document.createElement("div");
+
+        newNode.classList.add("sql-node");
+
+        parentNode.appendChild(newNode);
+
+        sqlNode.remove();
+
+        try {
+          ReactDOM.render(
+            <div>
+              <ClayLoadingIndicator className="d-inline-block mr-1" size="xs" />
+              generating chart...
+            </div>,
+            newNode
+          );
+
+          const result = await fetch(`${ENDPOINT}/bigquery-human-question`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              tableId: table.id,
+              query: dataStructure,
+            }),
+          });
+
+          const data = await result.json();
+
+          const chartType = await prompts.analyzeDataStructurePrompt({
+            data: JSON.stringify(data),
+            userPrompt: dataStructure,
+          });
+
+          if (data.errorMessage) {
+            throw new Error();
+          }
+
+          ReactDOM.render(
+            <ChartRenderer
+              data={data.result}
+              type={chartType.replace(" ", "").toLowerCase()}
+            />,
+            newNode
+          );
+        } catch (e) {
+          ReactDOM.render(
+            <ClayAlert displayType="danger" spritemap="/icons.svg">
+              Sorry, I couldn't generate a chart!
+            </ClayAlert>,
+            newNode
+          );
+        }
+      });
+    }
+  }, [loading, promptList, prompts, table, onConversationChange]);
+
+  useEffect(() => {
+    onConversationChange();
+  }, [promptList, onConversationChange]);
 
   return (
     <div
-      className="p-5"
-      style={{
-        left: 500,
-        position: "fixed",
-        overflowX: "auto",
-        height: "100%",
-        width: "calc(100% - 500px)",
-      }}
-    >
-      <h2>Chatbot Google Generative AI</h2>
+      onClick={async (event) => {
+        if (loading) return;
 
-      <ClayForm
-        onSubmit={async (e) => {
-          e.preventDefault();
+        if (
+          event.target.tagName === "LI" ||
+          event.target.tagName === "OL" ||
+          event.target.parentNode.tagName === "LI" ||
+          event.target.parentNode.tagName === "OL"
+        ) {
+          const userPrompt = event.target.textContent;
+
+          setPromptList([...promptList, { value: userPrompt, name: "YOU" }]);
 
           setLoading(true);
 
-          const response = await fetch(
-            `http://${IP}:5000/api/bigquery-human-question`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                tableId,
-                userPrompt,
-              }),
-            }
-          );
+          const aiPrompt = await prompts.userPrompt({
+            prompt: userPrompt,
+          });
 
-          const data = await response.json();
-
-          setData(data);
-
-          const responseExplainedQuery = await fetch(
-            `http://${IP}:5000/api/bigquery-query-explanation`,
-            {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({
-                query: data.query,
-              }),
-            }
-          );
-
-          const explainedQuery = await responseExplainedQuery.json();
-
-          setExplainedQuery(explainedQuery.result);
+          setPromptList([
+            ...promptList,
+            { value: userPrompt, name: "YOU" },
+            { value: aiPrompt, name: "AI" },
+          ]);
 
           setLoading(false);
-        }}
-      >
-        <ClayInput.Group>
-          <ClayInput.GroupItem prepend>
-            <ClayInput
-              placeholder="Ask a question..."
-              type="text"
-              value={userPrompt}
-              onChange={(e) => setUserPrompt(e.target.value)}
-            />
-          </ClayInput.GroupItem>
-          <ClayInput.GroupItem append shrink>
-            <ClayButton type="submit" disabled={!tableId || loading}>
-              Send Message
-            </ClayButton>
-          </ClayInput.GroupItem>
-        </ClayInput.Group>
-      </ClayForm>
+        }
+      }}
+      id="chat-content"
+      ref={conversationRef}
+    >
+      {!!promptList.length && (
+        <div>
+          {promptList.map((prompt, index) => {
+            return (
+              <div key={index} className="my-5 position-relative">
+                <div className="mb-3">
+                  <div className="thumbnail">
+                    <ClayIcon
+                      symbol={prompt.name === "YOU" ? "user" : "ac-logo"}
+                    />
+                  </div>
 
-      {loading && (
-        <div className="d-flex justify-content-center mt-8">
-          <ClayLoadingIndicator
-            displayType="primary"
-            shape="squares"
-            size="md"
-          />
+                  <strong className="name">
+                    {prompt.name === "YOU" ? "You" : "Analytics Cloud"}
+                  </strong>
+                </div>
+
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: marked.parse(prompt.value),
+                  }}
+                />
+              </div>
+            );
+          })}
         </div>
       )}
 
-      {!loading && !!Object.keys(data).length && (
-        <div className="mt-5">
-          <ClayPanel
-            displayTitle="Generated Query by LangChain JS + Gemini model gemini-pro"
-            displayType="secondary"
-            showCollapseIcon
-            collapsable
-            expanded
-          >
-            <ClayPanel.Body>
-              <pre
-                dangerouslySetInnerHTML={{
-                  __html: marked.parse(data.query),
-                }}
+      {loading && (
+        <div className="my-5">
+          <ClayLoadingIndicator />
+        </div>
+      )}
+
+      <div className="prompt-input px-10">
+        <ClayForm
+          onSubmit={async (event) => {
+            event.preventDefault();
+
+            setUserPrompt("");
+
+            setPromptList([...promptList, { value: userPrompt, name: "YOU" }]);
+
+            setLoading(true);
+
+            const aiPrompt = await prompts.userPrompt({
+              prompt: userPrompt,
+            });
+
+            setPromptList([
+              ...promptList,
+              { value: userPrompt, name: "YOU" },
+              { value: aiPrompt, name: "AI" },
+            ]);
+
+            setLoading(false);
+          }}
+        >
+          <ClayInput.Group>
+            <ClayInput.GroupItem prepend>
+              <ClayInput
+                placeholder="Enter a prompt here"
+                type="text"
+                value={userPrompt}
+                onChange={(e) => setUserPrompt(e.target.value)}
               />
+            </ClayInput.GroupItem>
+            <ClayInput.GroupItem append shrink>
+              <ClayButton type="submit" disabled={loading}>
+                {loading ? (
+                  <ClayLoadingIndicator className="d-inline-block mr-2" />
+                ) : (
+                  <ClayIcon symbol="magic" className="d-inline-block mr-2" />
+                )}
+                Send Message
+              </ClayButton>
+            </ClayInput.GroupItem>
+          </ClayInput.Group>
+        </ClayForm>
+      </div>
+    </div>
+  );
+}
 
-              <div
-                className="explained-query p-3 rounded bg-dark text-light"
-                dangerouslySetInnerHTML={{
-                  __html: marked.parse(explainedQuery),
-                }}
-              />
-            </ClayPanel.Body>
-          </ClayPanel>
+export function Chatbot({ onTableChange }) {
+  const [selectedTable, setSelectedTable] = useState(null);
 
-          {!data.errorMessage && (
-            <>
-              <ClayPanel
-                collapsable
-                displayTitle="Result from BigQuery"
-                displayType="secondary"
-                showCollapseIcon
-              >
-                <ClayPanel.Body>
-                  <pre className="bg-light p-4 rounded">
-                    {JSON.stringify(data.result, null, 2)}
-                  </pre>
-                </ClayPanel.Body>
-              </ClayPanel>
+  const chatbotRef = useRef(null);
 
-              <ChartRenderer data={data.result} />
-            </>
-          )}
+  const handleConversationChange = () => {
+    console.log(chatbotRef?.current?.scrollHeight);
 
-          {data.errorMessage && (
-            <ClayAlert displayType="danger">
-              An Error occurred on query execution: {data.errorMessage}
-            </ClayAlert>
-          )}
+    chatbotRef?.current?.scrollTo(0, chatbotRef?.current?.scrollHeight);
+  };
+
+  return (
+    <div className="chatbot px-10 py-5" ref={chatbotRef}>
+      {!selectedTable && (
+        <Setup
+          onTableChange={(table) => {
+            setSelectedTable(table);
+            onTableChange(table);
+          }}
+        />
+      )}
+
+      {selectedTable && (
+        <div>
+          <Conversation
+            table={selectedTable}
+            onConversationChange={handleConversationChange}
+          />
         </div>
       )}
     </div>

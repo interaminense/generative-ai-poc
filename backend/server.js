@@ -3,7 +3,6 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 
 const { BigQuery } = require("@google-cloud/bigquery");
-const { generateExplanation, generateSQL, executeQuery } = require("./utils");
 
 const dotenv = require("dotenv");
 const path = require("path");
@@ -20,6 +19,11 @@ const datasetId = process.env.REACT_APP_DATASET_ID;
 const bigquery = new BigQuery({
   keyFilename: "keyfile.json",
   projectId,
+});
+
+const bigqueryToConsultSQL = new BigQuery({
+  keyFilename: "keyfile.json",
+  projectId: process.env.REACT_APP_GOOGLE_CLOUD_PROJECT_ID,
 });
 
 async function getSchema(dataset, tableId) {
@@ -50,41 +54,19 @@ app.get("/api/bigquery-table-list", async (req, res) => {
 });
 
 app.post("/api/bigquery-human-question", async (req, res) => {
-  const { tableId, userPrompt } = req.body;
+  const { tableId, query } = req.body;
 
-  if (!tableId || !userPrompt) {
+  if (!tableId || !query) {
     return res.status(400).send("Missing required parameters");
   }
 
-  let query = "";
-
   try {
-    const dataset = bigquery.dataset(datasetId);
-    const schema = await getSchema(dataset, tableId);
-
-    query = await generateSQL({ tableId, schema }, userPrompt);
-
-    const result = await executeQuery(query);
-
-    res.json({ result, query });
-  } catch (err) {
-    res.status(500).json({ errorMessage: err.message, query });
-  }
-});
-
-app.post("/api/bigquery-query-explanation", async (req, res) => {
-  const { query } = req.body;
-
-  if (!query) {
-    return res.status(400).send("Missing required parameter");
-  }
-
-  try {
-    const result = await generateExplanation(query);
+    const results = await bigqueryToConsultSQL.query(query);
+    const result = results[0];
 
     res.json({ result });
   } catch (err) {
-    res.status(500).json({ errorMessage: err.message });
+    res.status(500).json({ errorMessage: err.message, query });
   }
 });
 

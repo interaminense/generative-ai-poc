@@ -9,6 +9,7 @@
     "@clayui/css": "^3.113.0",
     "@clayui/drop-down": "^3.113.0",
     "@clayui/form": "^3.113.0",
+    "@clayui/icon": "^3.111.0",
     "@clayui/loading-indicator": "^3.111.0",
     "@clayui/panel": "^3.113.0",
     "@google-cloud/bigquery": "^7.5.2",
@@ -18,6 +19,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
+    "langchain": "^0.1.36",
     "marked": "^12.0.1",
     "react": "^16.12.0",
     "react-dom": "16.12",
@@ -48,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }

@@ -1,38 +1,88 @@
 import React from "react";
 import {
-  BarChart,
+  BarChart as RechartBarChart,
   Bar,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
+  PieChart as RechartPieChart,
+  Pie,
 } from "recharts";
-import ClayPanel from "@clayui/panel";
 
-export function ChartRenderer({ data }) {
+const BarChart = ({ data }) => {
   const { xKey, yKey } = getFieldKeys(data);
 
   return (
-    <ClayPanel
-      collapsable
-      displayTitle="Generated Chart with React + Recharts BarChart"
-      displayType="secondary"
-      showCollapseIcon
-      expanded
-    >
-      <ClayPanel.Body className="p-5 d-flex justify-content-center">
-        <BarChart width={600} height={300} data={data}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey={xKey} />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey={yKey} fill="#8884d8" />
-        </BarChart>
-      </ClayPanel.Body>
-    </ClayPanel>
+    <RechartBarChart width={600} height={300} data={data}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey={xKey} />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey={yKey} fill="#0b5fff" />
+    </RechartBarChart>
   );
+};
+
+const PieChart = ({ data }) => {
+  let nameKey = "";
+  let dataKey = "";
+
+  try {
+    const keys = Object.keys(data[0]);
+    nameKey = keys.find((key) => typeof data[0][key] === "string");
+    dataKey = keys.find((key) => typeof data[0][key] === "number");
+  } catch (err) {
+    throw err;
+  }
+
+  return (
+    <RechartPieChart width={400} height={400}>
+      <Pie
+        data={data}
+        dataKey={dataKey}
+        nameKey={nameKey}
+        cx="50%"
+        cy="50%"
+        outerRadius={100}
+        label
+        fill="#0b5fff"
+      />
+      <Tooltip />
+      <Legend />
+    </RechartPieChart>
+  );
+};
+
+const CounterChart = ({ data }) => {
+  try {
+    const key = Object.keys(data[0]);
+
+    return (
+      <div>
+        <strong>{key[0]}</strong> <span>{data[0][key[0]]}</span>
+      </div>
+    );
+  } catch (err) {
+    throw err;
+  }
+};
+
+export function ChartRenderer({ data, type }) {
+  console.log({ type, data });
+
+  switch (type) {
+    case "barchart":
+      return <BarChart data={data} />;
+    case "counter":
+      return <CounterChart data={data} />;
+    case "piechart":
+      return <PieChart data={data} />;
+    default:
+      return <div>Invalid chart type</div>;
+  }
 }
 
 const getFieldKeys = (data) => {

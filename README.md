@@ -10,7 +10,7 @@ It empowers users with deeper insights into the retrieved data. After executing 
 
 In summary, our application seamlessly integrates powerful technologies to streamline data access, analysis, and visualization, empowering users to extract meaningful insights effortlessly
 
-![Screenshot from 2024-04-14 20-51-03](https://github.com/interaminense/generative-ai-poc/assets/12699849/ab8c03a1-62b3-489d-bf50-a248d0771e17)
+https://github.com/interaminense/generative-ai-poc/assets/12699849/77ff748a-6efd-46ec-9b29-4b1d339c16d2
 
 ## Getting Start
 

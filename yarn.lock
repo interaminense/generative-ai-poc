@@ -1261,6 +1261,15 @@
     classnames "^2.2.6"
     warning "^4.0.3"
 
+"@clayui/label@^3.111.0":
+  version "3.111.0"
+  resolved "https://registry.yarnpkg.com/@clayui/label/-/label-3.111.0.tgz#7b145ee346ca8eb5e539283a52b6d8aaec131ac9"
+  integrity sha512-MHZ4dlZrJawCeA0tLlXaD63XYeBImDKl7dwkYYO1RBTMf+ASYTL9znc5BKkhMxNZ+hDfnhhiIOpNlKMA8Hq+tw==
+  dependencies:
+    "@clayui/icon" "^3.111.0"
+    "@clayui/link" "^3.111.0"
+    classnames "^2.2.6"
+
 "@clayui/layout@^3.111.0":
   version "3.111.0"
   resolved "https://registry.yarnpkg.com/@clayui/layout/-/layout-3.111.0.tgz#6d25da1927111cb26d2eb581d48d28e22e3beae9"
@@ -1332,6 +1341,17 @@
   resolved "https://registry.yarnpkg.com/@clayui/table/-/table-3.111.0.tgz#50a0ece07a3ce40ffb0265d8585ff0792299cafe"
   integrity sha512-x7cJiGCkr9aoy1eHb84IQ2mtBQSBDe6L08+NlANhY7MNeGkY+Pa1CIdwVPeIQO2aBKDFQDXiprhqjZFbzpk8OA==
   dependencies:
+    classnames "^2.2.6"
+
+"@clayui/toolbar@^3.113.0":
+  version "3.113.0"
+  resolved "https://registry.yarnpkg.com/@clayui/toolbar/-/toolbar-3.113.0.tgz#d1ed957f5b9d2b42be803e5bddebda4f79587ef4"
+  integrity sha512-hJm9TB3gleUN/NFY3gVvdCrl0z959DHTLIL9uIfkndyQYD07fcRXIwSr/loWxAyRD6hrqAfG79VeW14Rkr5vMA==
+  dependencies:
+    "@clayui/form" "^3.113.0"
+    "@clayui/icon" "^3.111.0"
+    "@clayui/label" "^3.111.0"
+    "@clayui/link" "^3.111.0"
     classnames "^2.2.6"
 
 "@csstools/normalize.css@*":

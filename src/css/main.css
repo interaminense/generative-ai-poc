@@ -99,3 +99,13 @@ pre {
   font-size: 20px;
   margin: 0;
 }
+
+.feedback-message {
+  position: fixed;
+  bottom: 110px;
+  z-index: 1;
+}
+
+.stats-for-nerds-modal code {
+  color: white;
+}

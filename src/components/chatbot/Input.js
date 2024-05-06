@@ -27,7 +27,11 @@ export function Input({ onSubmitPrompt, loading }) {
             />
           </ClayInput.GroupItem>
           <ClayInput.GroupItem append shrink>
-            <ClayButton type="submit" disabled={loading}>
+            <ClayButton
+              aria-label="Send Message"
+              type="submit"
+              disabled={loading || !userPrompt}
+            >
               {loading ? (
                 <ClayLoadingIndicator className="d-inline-block mr-2" />
               ) : (

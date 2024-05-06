@@ -1,3 +1,4 @@
+import React from "react";
 import {
   BarChart as RechartBarChart,
   Bar,
@@ -9,7 +10,7 @@ import {
 } from "recharts";
 import { CHART_COLORS } from "../../utils/constants";
 
-export function BarChart({ data, axisX, axisY, dataKey }) {
+export function StackedBarChart({ data, axisX, axisY, numericKeys }) {
   return (
     <RechartBarChart width={800} height={400} data={data}>
       <CartesianGrid strokeDasharray="3 3" />
@@ -17,7 +18,10 @@ export function BarChart({ data, axisX, axisY, dataKey }) {
       <YAxis dataKey={axisY} />
       <Tooltip />
       <Legend />
-      <Bar dataKey={dataKey} fill={CHART_COLORS[0]} />
+
+      {numericKeys.map((key, index) => (
+        <Bar key={index} dataKey={key} fill={CHART_COLORS[index]} />
+      ))}
     </RechartBarChart>
   );
 }

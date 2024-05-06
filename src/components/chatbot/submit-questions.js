@@ -1,9 +1,14 @@
 import { fetchData } from "../../utils/ai-prompts/BigQueryAnalystPrompt";
-import { AC_USERNAME, USER_USERNAME } from "../Chatbot";
+import { AC_USERNAME, USER_USERNAME } from "./Chatbot";
 import { DataRenderer } from "../data-renderer/DataRenderer";
 import { RetryButton } from "./RetryButton";
 
-export async function submitQuestion(options, message, retry, previousQuery) {
+export async function submitQuestion(
+  options,
+  message,
+  previousQuery,
+  errorMessage
+) {
   const {
     addConversation,
     dataAnalyst,
@@ -25,11 +30,11 @@ export async function submitQuestion(options, message, retry, previousQuery) {
 
     addConversation({ username: AC_USERNAME, message: aiMessage });
   } else {
-    const query = await bigQueryAnalyst.generateQuery(
-      retry
-        ? `This query didn't work ${previousQuery}. Try a different one: ${message}`
-        : message
-    );
+    const query = await bigQueryAnalyst.retryQuery({
+      previousQuery,
+      errorMessage,
+      message,
+    });
 
     setLoadingMessage(
       "BigQuery analyst is working generating data for you ..."
@@ -42,16 +47,20 @@ export async function submitQuestion(options, message, retry, previousQuery) {
         renderer: {
           Component: RetryButton,
           props: {
-            onRetry: () => submitQuestion(options, message, true, query),
+            query,
+            onRetry: () =>
+              submitQuestion(
+                options,
+                message,
+                true,
+                query,
+                result.errorMessage
+              ),
           },
         },
         username: AC_USERNAME,
-        message:
-          "Sorry, I couldn't find any data. You can retry or try a different question.",
       });
     } else {
-      const dataStructure = JSON.stringify(result, null, 2);
-
       addConversation({
         username: AC_USERNAME,
         message: "",
@@ -59,7 +68,6 @@ export async function submitQuestion(options, message, retry, previousQuery) {
           Component: DataRenderer,
           props: {
             data: result?.result ?? [],
-            dataStructure,
             query,
           },
         },
@@ -69,7 +77,7 @@ export async function submitQuestion(options, message, retry, previousQuery) {
         "Data analyst is saving data on their flash memory ..."
       );
 
-      await dataAnalyst.addContext(dataStructure);
+      await dataAnalyst.addContext(JSON.stringify(result, null, 2));
     }
   }
 

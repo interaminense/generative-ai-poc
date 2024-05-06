@@ -109,3 +109,16 @@ pre {
 .stats-for-nerds-modal code {
   color: white;
 }
+
+.panel.sheet {
+  border-color: transparent;
+  transition: border-color ease-in-out 0.2s;
+}
+
+.panel.sheet:hover {
+  border-color: #f0f0f0;
+}
+
+.panel.sheet::after {
+  content: none;
+}

@@ -21,7 +21,7 @@ const bigquery = new BigQuery({
   projectId,
 });
 
-const bigqueryToConsultSQL = new BigQuery({
+const bigquerySqlGenerator = new BigQuery({
   keyFilename: "keyfile.json",
   projectId: process.env.REACT_APP_GOOGLE_CLOUD_PROJECT_ID,
 });
@@ -53,7 +53,7 @@ app.get("/api/bigquery-table-list", async (req, res) => {
   }
 });
 
-app.post("/api/bigquery-human-question", async (req, res) => {
+app.post("/api/bigquery-generate-query", async (req, res) => {
   const { tableId, query } = req.body;
 
   if (!tableId || !query) {
@@ -61,7 +61,7 @@ app.post("/api/bigquery-human-question", async (req, res) => {
   }
 
   try {
-    const results = await bigqueryToConsultSQL.query(query);
+    const results = await bigquerySqlGenerator.query(query);
     const result = results[0];
 
     res.json({ result });

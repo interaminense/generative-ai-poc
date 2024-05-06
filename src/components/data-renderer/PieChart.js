@@ -1,23 +1,8 @@
 import React from "react";
 import { Tooltip, Legend, PieChart as RechartPieChart, Pie } from "recharts";
+import { CHART_COLORS } from "../../utils/constants";
 
-export function PieChart({ data }) {
-  if (!data || data.length === 0) {
-    return null;
-  }
-
-  let nameKey = "";
-  let dataKey = "";
-
-  try {
-    const keys = Object.keys(data[0]);
-
-    nameKey = keys.find((key) => typeof data[0][key] === "string");
-    dataKey = keys.find((key) => typeof data[0][key] === "number");
-  } catch (err) {
-    throw err;
-  }
-
+export function PieChart({ data, dataKey, nameKey }) {
   return (
     <RechartPieChart width={400} height={400}>
       <Pie
@@ -28,7 +13,7 @@ export function PieChart({ data }) {
         cy="50%"
         outerRadius={100}
         label
-        fill="#0b5fff"
+        fill={CHART_COLORS[0]}
       />
       <Tooltip />
       <Legend />

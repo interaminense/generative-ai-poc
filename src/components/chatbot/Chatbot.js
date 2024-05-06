@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { DataAnalystPrompt } from "../utils/ai-prompts/DataAnalystPrompt";
-import { BigQueryAnalystPrompt } from "../utils/ai-prompts/BigQueryAnalystPrompt";
-import { Conversation } from "./chatbot/Conversation";
-import { Input } from "./chatbot/Input";
-import { Setup } from "./chatbot/Setup";
-import { FeedbackMessage } from "./chatbot/FeedbackMessage";
-import { submitQuestion } from "./chatbot/submit-questions";
+import { DataAnalystPrompt } from "../../utils/ai-prompts/DataAnalystPrompt";
+import { BigQueryAnalystPrompt } from "../../utils/ai-prompts/BigQueryAnalystPrompt";
+import { Conversation } from "./Conversation";
+import { Input } from "./Input";
+import { Setup } from "./Setup";
+import { FeedbackMessage } from "./FeedbackMessage";
+import { submitQuestion } from "./submit-questions";
 
 export const AC_USERNAME = "Analytics Cloud";
 export const USER_USERNAME = "You";

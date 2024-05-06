@@ -12,7 +12,6 @@ export class BasePrompt {
   static datasetId = process.env.REACT_APP_DATASET_ID;
 
   constructor(table) {
-    console.log(table);
     this.table = table;
 
     const model = new ChatGoogleGenerativeAI({

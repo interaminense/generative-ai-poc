@@ -4,6 +4,8 @@ export function Sidebar({ table }) {
   return (
     <div className="sidebar sidebar-dark">
       <div className="sidebar-body p-5">
+        <h2 className="mb-5">Stats for nerds</h2>
+
         <h4>Google Cloud Project ID</h4>
         <p>{process.env.REACT_APP_GOOGLE_CLOUD_PROJECT_ID}</p>
 

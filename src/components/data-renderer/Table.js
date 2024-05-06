@@ -39,13 +39,13 @@ function TableContent({ data }) {
   return (
     <ClayTable onSortChange={onSortChange} sort={sort}>
       <Head items={headers}>
-        {(column) => {
+        {(column, index) => {
           if (column === "_key") {
             return <></>;
           }
 
           return (
-            <Cell key={column} sortable>
+            <Cell key={`column-${index}`} sortable>
               <Text>{column}</Text>
             </Cell>
           );
@@ -56,12 +56,12 @@ function TableContent({ data }) {
         {(row) => {
           return (
             <Row>
-              {Object.keys(row).map((column) => {
+              {Object.keys(row).map((column, index) => {
                 if (column === "_key") {
                   return <></>;
                 }
 
-                return <Cell key={column}>{row[column]}</Cell>;
+                return <Cell key={`row-${index}`}>{row[column]}</Cell>;
               })}
             </Row>
           );

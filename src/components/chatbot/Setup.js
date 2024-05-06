@@ -37,7 +37,11 @@ export function Setup({ onTableChange }) {
       <h4>Select a table before starting</h4>
 
       <ClayDropDown
-        trigger={<ClayButton displayType="secondary">select table</ClayButton>}
+        trigger={
+          <ClayButton aria-label="select table" displayType="secondary">
+            select table
+          </ClayButton>
+        }
         closeOnClick
       >
         {tableList.map((table) => (

@@ -29,7 +29,7 @@ export async function fetchData(table, query) {
       throw new Error("Invalid query");
     }
 
-    const result = await fetch(`${ENDPOINT}/bigquery-human-question`, {
+    const result = await fetch(`${ENDPOINT}/bigquery-generate-query`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -64,6 +64,16 @@ export class BigQueryAnalystPrompt extends BasePrompt {
 
   async generateQuery(question) {
     const prompt = `User question: ${question}. Answer with a bigquery sql explicit code only.`;
+
+    return await this.callConversation(prompt);
+  }
+
+  async retryQuery({ previousQuery, errorMessage, message }) {
+    const prompt = `
+      This query failed: ${previousQuery}.
+      This is the error that caused failure: ${errorMessage}.
+      
+      User question: ${message}. You should fix the query and answer with a bigquery sql explicit code only.`;
 
     return await this.callConversation(prompt);
   }

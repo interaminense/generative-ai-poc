@@ -1354,6 +1354,16 @@
     "@clayui/link" "^3.111.0"
     classnames "^2.2.6"
 
+"@clayui/tooltip@^3.113.0":
+  version "3.113.0"
+  resolved "https://registry.yarnpkg.com/@clayui/tooltip/-/tooltip-3.113.0.tgz#3558c0ec3383d2815873d40cd3d3a1693495c501"
+  integrity sha512-30gpWMqeZWFwW0acEWKuAqwvxTfa7o1qd4QSEmCV6gmxPYwZVfhnbxaVds2RJB3aGn36El/kJgk+0/xN4xvgCw==
+  dependencies:
+    "@clayui/shared" "^3.113.0"
+    classnames "^2.2.6"
+    dom-align "^1.12.2"
+    warning "^4.0.3"
+
 "@csstools/normalize.css@*":
   version "12.1.1"
   resolved "https://registry.yarnpkg.com/@csstools/normalize.css/-/normalize.css-12.1.1.tgz#f0ad221b7280f3fc814689786fd9ee092776ef8f"

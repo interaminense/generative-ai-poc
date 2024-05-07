@@ -61,16 +61,16 @@ const ChatbotInit = ({ onConversationChange, table }) => {
       <Input
         loading={!!loadingMessage}
         onSubmitPrompt={(message) => {
-          submitQuestion(
-            {
+          submitQuestion({
+            options: {
               table,
               dataAnalyst,
               bigQueryAnalyst,
               addConversation,
               setLoadingMessage,
             },
-            message
-          );
+            message,
+          });
         }}
       />
     </>

@@ -3,12 +3,13 @@ import { AC_USERNAME, USER_USERNAME } from "./Chatbot";
 import { DataRenderer } from "../data-renderer/DataRenderer";
 import { RetryButton } from "./RetryButton";
 
-export async function submitQuestion(
+export async function submitQuestion({
   options,
   message,
-  previousQuery,
-  errorMessage
-) {
+  query: previousQuery,
+  errorMessage,
+  retry = false,
+}) {
   const {
     addConversation,
     dataAnalyst,
@@ -23,22 +24,28 @@ export async function submitQuestion(
 
   const isRelevantQuestion = await dataAnalyst.classifyQuestion(message);
 
-  if (isRelevantQuestion.toLowerCase() === "false") {
-    const aiMessage = await dataAnalyst.askQuestion(message);
-
+  if (isRelevantQuestion.toLowerCase().includes("false")) {
     setLoadingMessage("Still working on it ...");
+
+    const aiMessage = await dataAnalyst.askQuestion(message);
 
     addConversation({ username: AC_USERNAME, message: aiMessage });
   } else {
-    const query = await bigQueryAnalyst.retryQuery({
-      previousQuery,
-      errorMessage,
-      message,
-    });
-
     setLoadingMessage(
       "BigQuery analyst is working generating data for you ..."
     );
+
+    let query = null;
+
+    if (retry) {
+      query = await bigQueryAnalyst.retryQuery({
+        previousQuery,
+        errorMessage,
+        message,
+      });
+    } else {
+      query = await bigQueryAnalyst.generateQuery(message);
+    }
 
     const result = await fetchData(table, query);
 
@@ -49,13 +56,13 @@ export async function submitQuestion(
           props: {
             query,
             onRetry: () =>
-              submitQuestion(
+              submitQuestion({
                 options,
                 message,
-                true,
                 query,
-                result.errorMessage
-              ),
+                errorMessage: result.errorMessage,
+                retry: true,
+              }),
           },
         },
         username: AC_USERNAME,

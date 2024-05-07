@@ -48,6 +48,24 @@ export async function fetchData(table, query) {
   return data;
 }
 
+function generateSchemaPrompt(schema, depth = 0) {
+  let prompt = "";
+
+  schema.fields.forEach((field) => {
+    prompt += "  ".repeat(depth);
+    prompt += `- **${field.name}**: `;
+    if (field.fields) {
+      prompt += "A subgroup containing fields:\n";
+      prompt += generateSchemaPrompt(field, depth + 1);
+    } else {
+      prompt += `TYPE: ${field.type}`;
+      prompt += "\n";
+    }
+  });
+
+  return prompt;
+}
+
 export class BigQueryAnalystPrompt extends BasePrompt {
   async assignRole() {
     const prompt = `
@@ -56,7 +74,10 @@ export class BigQueryAnalystPrompt extends BasePrompt {
 	  **projectId:** ${BasePrompt.projectId}
 	  **datasetId:** ${BasePrompt.datasetId}
 	  **tableId:** ${this.table.id}
-	  **schema:** ${JSON.stringify(this.table.schema)}
+    
+	  **data base schema:**
+
+    ${generateSchemaPrompt(this.table.schema)}
 	  `;
 
     await this.callConversation(prompt);

@@ -12,7 +12,7 @@ It empowers users with deeper insights into the retrieved data. After executing 
 
 In summary, our application seamlessly integrates powerful technologies to streamline data access, analysis, and visualization, empowering users to extract meaningful insights effortlessly
 
-![Untitled](https://github.com/interaminense/generative-ai-poc/assets/12699849/205ce9aa-868d-4335-83c8-ba75013f0bdd)
+![](https://github.com/interaminense/generative-ai-poc/assets/12699849/22fd9b4e-05ba-4ea3-9781-03e005fa2315)
 
 ## Demo
 
@@ -20,15 +20,27 @@ https://github.com/interaminense/generative-ai-poc/assets/12699849/77ff748a-6efd
 
 ## Stack
 
-* Frontend
- - React
- - Recharts
- - ClayUI
- - Gemini API model `gemini-pro`
- - LangChain
-* Backend
- - NodeJS
- - Google Clound BigQuery API
+<ul>
+ <li>
+  Frontend
+  
+  <ul>
+   <li>React</li>
+   <li>Recharts</li>
+   <li>Gemini API model `gemini-pro`</li>
+   <li>LangChain</li>
+  </ul>
+ </li>
+
+ <li>
+   Backend
+
+   <ul>
+    <li>NodeJS</li>
+    <li>Google Clound BigQuery API</li>
+   </ul>
+ </li>
+</ul>
 
 ## Getting Start
 
@@ -51,4 +63,4 @@ REACT_APP_DATASET_ID=google_analytics_sample
 
 1. Well-defined prompts are the key to good AI outcomes. Here's an article that can be used as a reference to create suitable prompts for each database: https://answerrocket.com/resources/leveraging-ai-for-sql-code-generation-guide/.
 
-2. To generate graphics, it's necessary to employ a multifaceted process, combining data, visualizations, and interactivity to present information clearly and concisely. We can use Looker as an example for this. [Learn more here](LOOKER.md).
+2. To generate graphics, it's necessary to employ a multifaceted process, combining data, visualizations, and interactivity to present information clearly and concisely. We can use Looker as an example for this. [read more here](LOOKER.md).

@@ -13,44 +13,9 @@ const app = express();
 
 app.use(cors(), express.json(), bodyParser.urlencoded({ extended: true }));
 
-const projectId = process.env.REACT_APP_PROJECT_ID;
-const datasetId = process.env.REACT_APP_DATASET_ID;
-
 const bigquery = new BigQuery({
   keyFilename: "keyfile.json",
-  projectId,
-});
-
-const bigquerySqlGenerator = new BigQuery({
-  keyFilename: "keyfile.json",
   projectId: process.env.REACT_APP_GOOGLE_CLOUD_PROJECT_ID,
-});
-
-async function getSchema(dataset, tableId) {
-  const table = dataset.table(tableId);
-  const result = await table.getMetadata();
-
-  return result[0].schema;
-}
-
-app.get("/api/bigquery-table-list", async (req, res) => {
-  try {
-    const dataset = bigquery.dataset(datasetId);
-    const [tables] = await dataset.getTables();
-
-    const tableList = await Promise.all(
-      tables.map(async ({ id }) => {
-        const schema = await getSchema(dataset, id);
-
-        return { id, schema };
-      })
-    );
-
-    res.json(tableList);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Error querying BigQuery table list");
-  }
 });
 
 app.post("/api/bigquery-generate-query", async (req, res) => {
@@ -61,7 +26,7 @@ app.post("/api/bigquery-generate-query", async (req, res) => {
   }
 
   try {
-    const results = await bigquerySqlGenerator.query(query);
+    const results = await bigquery.query(query);
     const result = results[0];
 
     res.json({ result });

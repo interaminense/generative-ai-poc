@@ -1,17 +1,17 @@
-import { useState } from "react";
-import ClayDropDown from "@clayui/drop-down";
-import ClayButton from "@clayui/button";
-import { Table } from "./Table";
-import ClayIcon from "@clayui/icon";
 import { BarChart } from "./BarChart";
-import { PieChart } from "./PieChart";
-import ClayToolbar from "@clayui/toolbar";
-import { StackedBarChart } from "./StackedBarChart";
 import { LineChart } from "./LineChart";
-import { StackedAreaChart } from "./StackedAreaChart";
-import { StatsForNerds } from "../StatsForNerds";
-import { Text } from "@clayui/core";
 import { Option, Picker } from "@clayui/core";
+import { PieChart } from "./PieChart";
+import { StackedAreaChart } from "./StackedAreaChart";
+import { StackedBarChart } from "./StackedBarChart";
+import { StatsForNerds } from "../StatsForNerds";
+import { Table } from "./Table";
+import { Text } from "@clayui/core";
+import { useState } from "react";
+import ClayButton from "@clayui/button";
+import ClayDropDown from "@clayui/drop-down";
+import ClayIcon from "@clayui/icon";
+import ClayToolbar from "@clayui/toolbar";
 
 const dataRenderer = {
   table: {
@@ -31,7 +31,7 @@ const dataRenderer = {
     enableConfig: {
       axisX: true,
       axisY: true,
-      dataKey: true,
+      dataKey: false,
       nameKey: false,
       cog: true,
     },
@@ -93,7 +93,7 @@ function extractNumericKeys(data) {
     }
   }
 
-  return Array.from(numericKeysSet);
+  return Array.from(numericKeysSet).sort();
 }
 
 function extractStringKeys(data) {
@@ -122,12 +122,26 @@ function extractAllKeys(data) {
   return Array.from(allKeysSet);
 }
 
-export function DataRenderer({ data, query }) {
-  const [selectedDataRenderer, setSelectedDataRenderer] = useState("table");
+const selectDataRenderer = ({ allKeys, numericKeys, stringKeys }) => {
+  if (numericKeys.length > 1) {
+    return "stacked-bar-chart";
+  }
 
+  if (numericKeys.length === 1) {
+    return "bar-chart";
+  }
+
+  return "table";
+};
+
+export function DataRenderer({ data, query }) {
   const allKeys = extractAllKeys(data);
   const numericKeys = extractNumericKeys(data);
   const stringKeys = extractStringKeys(data);
+
+  const [selectedDataRenderer, setSelectedDataRenderer] = useState(
+    selectDataRenderer({ allKeys, numericKeys, stringKeys })
+  );
 
   const [selectedAxisX, setSelectedAxisX] = useState(allKeys[0]);
   const [selectedAxisY, setSelectedAxisY] = useState(numericKeys[0]);

@@ -1,26 +1,64 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ClayButton from "@clayui/button";
 import ClayForm, { ClayInput } from "@clayui/form";
 import ClayLoadingIndicator from "@clayui/loading-indicator";
 import ClayIcon from "@clayui/icon";
+import ClayDropDown, { Align } from "@clayui/drop-down";
 
-export function Input({ onSubmitPrompt, loading }) {
+export function Input({
+  selectedCommand,
+  commands,
+  onCommandChange,
+  onSubmitPrompt,
+  loading,
+}) {
   const [userPrompt, setUserPrompt] = useState("");
+  const [previousUserPrompt, setPreviousUserPrompt] = useState("");
+
+  const inputRef = useRef(null);
 
   return (
     <div className="prompt-input px-10">
       <ClayForm
+        onKeyDown={(event) => {
+          if (previousUserPrompt && event.key === "ArrowUp") {
+            setUserPrompt(previousUserPrompt);
+            setPreviousUserPrompt("");
+          }
+        }}
         onSubmit={(event) => {
           event.preventDefault();
 
+          setPreviousUserPrompt(userPrompt);
           setUserPrompt("");
-          onSubmitPrompt(userPrompt);
+          onSubmitPrompt({ userPrompt });
         }}
       >
         <ClayInput.Group>
+          <ClayInput.GroupItem shrink>
+            <ClayDropDown
+              trigger={
+                <ClayButton displayType="secondary">
+                  {selectedCommand.label} <ClayIcon symbol="caret-bottom" />
+                </ClayButton>
+              }
+              alignmentPosition={Align.TopLeft}
+            >
+              {commands.map((command) => (
+                <ClayDropDown.Item
+                  key={command.value}
+                  value={command.value}
+                  onClick={() => onCommandChange(command)}
+                >
+                  {command.label}
+                </ClayDropDown.Item>
+              ))}
+            </ClayDropDown>
+          </ClayInput.GroupItem>
           <ClayInput.GroupItem prepend>
             <ClayInput
-              placeholder="Enter a prompt here"
+              ref={inputRef}
+              placeholder={selectedCommand.inputDescription}
               type="text"
               value={userPrompt}
               onChange={(e) => setUserPrompt(e.target.value)}

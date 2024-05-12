@@ -9,7 +9,7 @@ import {
 } from "recharts";
 import { CHART_COLORS } from "../../utils/constants";
 
-export function BarChart({ data, axisX, axisY, dataKey }) {
+export function BarChart({ data, axisX, axisY }) {
   return (
     <RechartBarChart width={800} height={400} data={data}>
       <CartesianGrid strokeDasharray="3 3" />
@@ -17,7 +17,7 @@ export function BarChart({ data, axisX, axisY, dataKey }) {
       <YAxis dataKey={axisY} />
       <Tooltip />
       <Legend />
-      <Bar dataKey={dataKey} fill={CHART_COLORS[0]} />
+      <Bar dataKey={axisY} fill={CHART_COLORS[0]} />
     </RechartBarChart>
   );
 }

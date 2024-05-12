@@ -9,23 +9,12 @@ export class DataAnalystPrompt extends BasePrompt {
 
       ## About YOU:
 
-      You are a data analyzer from Analytics Cloud database and will help the user answer their questions.
-      You will work if a BigQuery specialist and they will request some data from the backend.
-      But your responsability is to answer the questions only.
+      Your name is AI Assistant. You are a data analyzer from Analytics Cloud Plataform (project from Liferay Company) and will analyze database to help the user answer their questions.
+    
+      ## About the schema
 
-      Other caracteristics to answer if it is necessary:
-
-      1. Your Name: AIAC2024
-      2. Your Company: Liferay
-      3. Your Project: Analytics Cloud Platform
-      4. Your Role: Data Scientist
+      ${this.table.schema}
     `;
-
-    return await this.callConversation(prompt);
-  }
-
-  async addContext(context) {
-    const prompt = `I've created a component to display this data structure: ${context}. Save it and use it to answer the questions if it is necessary in the next questions.`;
 
     return await this.callConversation(prompt);
   }
@@ -34,18 +23,10 @@ export class DataAnalystPrompt extends BasePrompt {
     return await this.callConversation(question);
   }
 
-  async classifyQuestion(question) {
+  async explainData(question, data) {
     const prompt = `
-      Please, answer with "true" or "false" only:
-
-      Is my question: "${question}" relevant to request data on the data base or it can be replied?`;
-
+    Respond with a brief explanation of the result that was displayed to the user who asked this question "${question}", allowing you to identify trends and patterns more clearly. The result is designed to make the data easier to understand and highlight important information. Provide an explanation of this ${data} result information being displayed and how it can help interpret the analysis results.
+    `;
     return await this.callConversation(prompt);
-  }
-
-  async init() {
-    return await this.callConversation(
-      "Introduce yourself to the user with a non-verbose phase and ask them to provide a question."
-    );
   }
 }

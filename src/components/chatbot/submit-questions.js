@@ -12,28 +12,26 @@ export async function submitQuestion({
 }) {
   const {
     addConversation,
-    dataAnalyst,
     bigQueryAnalyst,
-    table,
+    command,
+    dataAnalyst,
     setLoadingMessage,
+    table,
   } = options;
 
   addConversation({ username: USER_USERNAME, message });
 
-  setLoadingMessage("Working on classify your question ...");
-
-  const isRelevantQuestion = await dataAnalyst.classifyQuestion(message);
-
-  if (isRelevantQuestion.toLowerCase().includes("false")) {
-    setLoadingMessage("Still working on it ...");
+  if (command.value === "conversation") {
+    setLoadingMessage("AI Assistant is thinking about it...");
 
     const aiMessage = await dataAnalyst.askQuestion(message);
 
-    addConversation({ username: AC_USERNAME, message: aiMessage });
+    addConversation({
+      username: `${AC_USERNAME} (Data Analyst)`,
+      message: aiMessage,
+    });
   } else {
-    setLoadingMessage(
-      "BigQuery analyst is working generating data for you ..."
-    );
+    setLoadingMessage("AI Assistant is generating data for you...");
 
     let query = null;
 
@@ -65,12 +63,19 @@ export async function submitQuestion({
               }),
           },
         },
-        username: AC_USERNAME,
+        username: `${AC_USERNAME} (BigQuery Analyst)`,
       });
     } else {
+      setLoadingMessage("AI Assitant is generating a reply about the data...");
+
+      const aiMessage = await dataAnalyst.explainData(
+        message,
+        JSON.stringify(result?.result ?? [], null, 2)
+      );
+
       addConversation({
-        username: AC_USERNAME,
-        message: "",
+        username: `${AC_USERNAME} (BigQuery & Data Analysts)`,
+        message: aiMessage,
         renderer: {
           Component: DataRenderer,
           props: {
@@ -79,12 +84,6 @@ export async function submitQuestion({
           },
         },
       });
-
-      setLoadingMessage(
-        "Data analyst is saving data on their flash memory ..."
-      );
-
-      await dataAnalyst.addContext(JSON.stringify(result, null, 2));
     }
   }
 

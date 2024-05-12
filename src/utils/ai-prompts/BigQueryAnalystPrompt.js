@@ -91,10 +91,9 @@ export class BigQueryAnalystPrompt extends BasePrompt {
 
   async retryQuery({ previousQuery, errorMessage, message }) {
     const prompt = `
-      This query failed: ${previousQuery}.
-      This is the error that caused failure: ${errorMessage}.
+      This failed query "${previousQuery}" was caused by this error "${errorMessage}" after the user question "${message}".
       
-      User question: ${message}. You should fix the query and answer with a bigquery sql explicit code only.`;
+      You should fix the query and answer with a bigquery sql explicit code only.`;
 
     return await this.callConversation(prompt);
   }

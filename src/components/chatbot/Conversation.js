@@ -1,32 +1,74 @@
 import ClayIcon from "@clayui/icon";
 import { marked } from "marked";
-import { USER_USERNAME } from "./Chatbot";
-import { Panel } from "../Panel";
+import { AC_USERNAME, USER_USERNAME } from "./Chatbot";
+import ClayButton from "@clayui/button";
 
 export function Conversation({ username, message, renderer }) {
-  const Content = username === USER_USERNAME ? "div" : Panel;
-
   return (
-    <div className="my-5 position-relative">
-      <div className="mb-3">
-        <div className="thumbnail">
-          <ClayIcon symbol={username === USER_USERNAME ? "user" : "ac-logo"} />
+    <>
+      {username === AC_USERNAME && (
+        <div className="box ai-box d-flex">
+          <div className="thumbnail">
+            <ClayIcon symbol="ac-logo" />
+          </div>
+
+          <div>
+            {message && (
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: marked.parse(message),
+                }}
+              />
+            )}
+
+            {renderer && <renderer.Component {...renderer.props} />}
+
+            <div className="d-flex mt-2 ai-options">
+              <ClayButton
+                aria-label="Download CSV"
+                data-tooltip-align="top"
+                title="Download CSV"
+                size="sm"
+                displayType="secondary"
+                borderless
+                disabled
+              >
+                <ClayIcon symbol="download" />
+              </ClayButton>
+
+              <ClayButton
+                aria-label="Copy Text"
+                data-tooltip-align="top"
+                title="Copy Text"
+                size="sm"
+                displayType="secondary"
+                borderless
+                disabled
+              >
+                <ClayIcon symbol="copy" />
+              </ClayButton>
+
+              <ClayButton
+                aria-label="Report Issue"
+                data-tooltip-align="top"
+                title="Report Issue"
+                size="sm"
+                displayType="secondary"
+                borderless
+                disabled
+              >
+                <ClayIcon symbol="thumbs-down" />
+              </ClayButton>
+            </div>
+          </div>
         </div>
+      )}
 
-        <strong className="name">{username}</strong>
-      </div>
-
-      <Content>
-        {message && (
-          <div
-            dangerouslySetInnerHTML={{
-              __html: marked.parse(message),
-            }}
-          />
-        )}
-
-        {renderer && <renderer.Component {...renderer.props} />}
-      </Content>
-    </div>
+      {username === USER_USERNAME && (
+        <div className="box user-box">
+          <div className="message">{message}</div>
+        </div>
+      )}
+    </>
   );
 }

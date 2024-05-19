@@ -10,9 +10,9 @@ import {
 } from "recharts";
 import { CHART_COLORS } from "../../utils/constants";
 
-export function LineChart({ data, axisX, axisY, dataKey }) {
+export function LineChart({ data, axisX, axisY, dataKey, width, height }) {
   return (
-    <RechartLineChart width={800} height={400} data={data}>
+    <RechartLineChart width={width} height={height} data={data}>
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey={axisX} />
       <YAxis dataKey={axisY} />

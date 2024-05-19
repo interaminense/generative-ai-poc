@@ -1,3 +1,5 @@
+import schema from "./schema.json";
+
 export const ENDPOINT = `http://${
   process.env.REACT_APP_EXTERNAL_IP_ADDRESS || "localhost"
 }:5000/api`;
@@ -13,3 +15,8 @@ export const CHART_COLORS = [
   "#FFD76E",
   "#5FC8FF",
 ];
+
+export const TABLE = {
+  id: process.env.REACT_APP_TABLE_ID,
+  schema,
+};

@@ -27,7 +27,7 @@ export async function submitQuestion({
     const aiMessage = await dataAnalyst.askQuestion(message);
 
     addConversation({
-      username: `${AC_USERNAME} (Data Analyst)`,
+      username: AC_USERNAME,
       message: aiMessage,
     });
   } else {
@@ -74,7 +74,7 @@ export async function submitQuestion({
       );
 
       addConversation({
-        username: `${AC_USERNAME} (BigQuery & Data Analysts)`,
+        username: AC_USERNAME,
         message: aiMessage,
         renderer: {
           Component: DataRenderer,

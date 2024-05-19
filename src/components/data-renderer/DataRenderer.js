@@ -158,19 +158,25 @@ export function DataRenderer({ data, query }) {
         <ClayToolbar.Nav>
           <ClayToolbar.Item className="text-left" expand>
             <ClayToolbar.Section>
-              <Text weight="bold">Data Visualizer</Text>
+              <Text weight="bold">Data Viewer</Text>
             </ClayToolbar.Section>
           </ClayToolbar.Item>
 
           <ClayToolbar.Item>
             <ClayDropDown
-              className="d-inline-block ml-2"
+              className="d-inline-block"
               closeOnClick
               trigger={
-                <ClayButton aria-label="Data Renderer" displayType="secondary">
+                <ClayButton
+                  size="xs"
+                  borderless
+                  className="text-uppercase"
+                  aria-label="Data Renderer"
+                  displayType="secondary"
+                >
                   {dataRenderer[selectedDataRenderer].label}
 
-                  <ClayIcon className="ml-2" symbol="caret-bottom" />
+                  <ClayIcon className="ml-1" symbol="caret-bottom" />
                 </ClayButton>
               }
             >
@@ -190,6 +196,8 @@ export function DataRenderer({ data, query }) {
               <ClayDropDown
                 trigger={
                   <ClayButton
+                    size="xs"
+                    borderless
                     title="Configure Chart"
                     data-tooltip-align="top"
                     displayType="secondary"
@@ -239,6 +247,7 @@ export function DataRenderer({ data, query }) {
                 {enableConfig.dataKey && (
                   <ClayDropDown.Item>
                     <Text weight="bold">Data key</Text>
+
                     <Picker
                       defaultSelectedKey={selectedDataKey}
                       className="my-2"
@@ -284,6 +293,8 @@ export function DataRenderer({ data, query }) {
       </ClayToolbar>
 
       <DataRendererComponent
+        width={758}
+        height={400}
         data={data}
         axisX={selectedAxisX}
         axisY={selectedAxisY}

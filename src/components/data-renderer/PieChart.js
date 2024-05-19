@@ -2,9 +2,9 @@ import React from "react";
 import { Tooltip, Legend, PieChart as RechartPieChart, Pie } from "recharts";
 import { CHART_COLORS } from "../../utils/constants";
 
-export function PieChart({ data, dataKey, nameKey }) {
+export function PieChart({ data, dataKey, nameKey, height }) {
   return (
-    <RechartPieChart width={400} height={400}>
+    <RechartPieChart width={400} height={height}>
       <Pie
         data={data}
         dataKey={dataKey}

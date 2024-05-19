@@ -5,6 +5,12 @@ import ClayLoadingIndicator from "@clayui/loading-indicator";
 import ClayIcon from "@clayui/icon";
 import ClayDropDown, { Align } from "@clayui/drop-down";
 
+function removePrePrompt(userPrompt) {
+  const regex = /\/.*?:.*? /;
+
+  return userPrompt.replace(regex, "");
+}
+
 export function Input({
   selectedCommand,
   commands,
@@ -18,7 +24,7 @@ export function Input({
   const inputRef = useRef(null);
 
   return (
-    <div className="prompt-input px-10">
+    <div className="prompt-input">
       <ClayForm
         onKeyDown={(event) => {
           if (previousUserPrompt && event.key === "ArrowUp") {
@@ -29,9 +35,12 @@ export function Input({
         onSubmit={(event) => {
           event.preventDefault();
 
-          setPreviousUserPrompt(userPrompt);
+          const newUserPrompt = removePrePrompt(userPrompt);
+
+          setPreviousUserPrompt(newUserPrompt);
           setUserPrompt("");
-          onSubmitPrompt({ userPrompt });
+
+          onSubmitPrompt({ userPrompt: newUserPrompt });
         }}
       >
         <ClayInput.Group>
@@ -68,12 +77,12 @@ export function Input({
             <ClayButton
               aria-label="Send Message"
               type="submit"
-              disabled={loading || !userPrompt}
+              disabled={loading || !removePrePrompt(userPrompt)}
             >
               {loading ? (
                 <ClayLoadingIndicator className="d-inline-block mr-2" />
               ) : (
-                <ClayIcon symbol="magic" className="d-inline-block mr-2" />
+                <ClayIcon symbol="stars" className="d-inline-block mr-2" />
               )}
               Send Message
             </ClayButton>

@@ -13,10 +13,11 @@ export function StatsForNerds({ dataStructure, query }) {
       <ClayDropDown
         trigger={
           <ClayButton
+            size="xs"
             aria-label="More Actions"
             title="More Actions"
-            displayType="unstyled"
-            monospaced
+            displayType="secondary"
+            borderless
           >
             <ClayIcon symbol="ellipsis-v" />
           </ClayButton>
@@ -46,34 +47,34 @@ const StatsForNerdsModal = ({
   query,
 }) => {
   return (
-    <ClayModal className="stats-for-nerds-modal" observer={observer}>
+    <ClayModal className="stats-for-nerds-modal" observer={observer} size="lg">
       <ClayModal.Header>
         <ClayModal.Title>Stats for nerd</ClayModal.Title>
       </ClayModal.Header>
 
       <ClayModal.Body>
-        {dataStructure && (
-          <>
-            <Text weight="bold">Data Structure</Text>
-
-            <div className="bg-dark text-white rounded mb-4 mt-2 p-4">
-              <pre>
-                <code>{dataStructure}</code>
-              </pre>
-            </div>
-          </>
-        )}
-
         {query && (
           <>
             <Text weight="bold">BigQuery Query</Text>
 
             <div
-              className="bg-dark text-white rounded mt-2 p-4"
+              className="bg-dark text-white rounded p-4 mb-4"
               dangerouslySetInnerHTML={{
                 __html: marked.parse(query),
               }}
             />
+          </>
+        )}
+
+        {dataStructure && (
+          <>
+            <Text weight="bold">Data Structure</Text>
+
+            <div className="bg-dark text-white rounded p-4">
+              <pre>
+                <code>{dataStructure}</code>
+              </pre>
+            </div>
           </>
         )}
       </ClayModal.Body>

@@ -1,31 +1,41 @@
-import React, { useState } from "react";
+import React from "react";
 import { Sidebar } from "./components/Sidebar";
 import { Chatbot } from "./components/chatbot/Chatbot";
 import { ClayIconSpriteContext } from "@clayui/icon";
 import { Header } from "./components/Header";
 import { ClayModalProvider } from "@clayui/modal";
 import { ClayTooltipProvider } from "@clayui/tooltip";
+import { AppContextProvider, useAppContext } from "./AppContext";
+import { TABLE } from "./utils/constants";
 
 const spritemap = "/icons.svg";
 
 function App() {
-  const [selectedTable, setSelectedTable] = useState(null);
+  const { state } = useAppContext();
 
   return (
     <div className="App">
-      <ClayIconSpriteContext.Provider value={spritemap}>
-        <ClayTooltipProvider>
-          <div>
-            <ClayModalProvider>
-              <Header />
-              <Chatbot onTableChange={setSelectedTable} />
-              <Sidebar table={selectedTable} />
-            </ClayModalProvider>
-          </div>
-        </ClayTooltipProvider>
-      </ClayIconSpriteContext.Provider>
+      <Header />
+
+      <Chatbot />
+
+      {state.sidebarOpened && <Sidebar table={TABLE} />}
     </div>
   );
 }
 
-export default App;
+const Wrapper = () => (
+  <AppContextProvider>
+    <ClayIconSpriteContext.Provider value={spritemap}>
+      <ClayTooltipProvider>
+        <div>
+          <ClayModalProvider>
+            <App />
+          </ClayModalProvider>
+        </div>
+      </ClayTooltipProvider>
+    </ClayIconSpriteContext.Provider>
+  </AppContextProvider>
+);
+
+export default Wrapper;

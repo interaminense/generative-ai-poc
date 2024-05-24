@@ -48,8 +48,9 @@
 
 .box.user-box .message {
   background: #ebebeb;
-  padding: 10px 20px;
+  padding: 10px 30px;
   border-radius: 50px;
+  max-width: 600px;
 }
 
 pre {
@@ -117,4 +118,26 @@ pre {
 
 .stats-for-nerds-modal code {
   color: white;
+}
+
+.suggestion {
+  border: 1px solid #d5d5d5;
+  flex: 1;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.suggestion:hover {
+  border: 1px solid #000;
+  flex: 1;
+  margin: 10px;
+  padding: 15px;
+  border-radius: 8px;
+}
+
+.suggestions {
+  display: flex;
+  width: 100%;
 }

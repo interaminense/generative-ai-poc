@@ -1,4 +1,4 @@
-import { BasePrompt } from "./BasePrompt";
+import { BasePrompt, generateSchemaPrompt } from "./BasePrompt";
 import { ENDPOINT } from "../constants";
 
 function extractQuery(string) {
@@ -46,24 +46,6 @@ export async function fetchData(table, query) {
   }
 
   return data;
-}
-
-function generateSchemaPrompt(schema, depth = 0) {
-  let prompt = "";
-
-  schema.fields.forEach((field) => {
-    prompt += "  ".repeat(depth);
-    prompt += `- **${field.name}**: `;
-    if (field.fields) {
-      prompt += "A subgroup containing fields:\n";
-      prompt += generateSchemaPrompt(field, depth + 1);
-    } else {
-      prompt += `TYPE: ${field.type}`;
-      prompt += "\n";
-    }
-  });
-
-  return prompt;
 }
 
 export class BigQueryAnalystPrompt extends BasePrompt {

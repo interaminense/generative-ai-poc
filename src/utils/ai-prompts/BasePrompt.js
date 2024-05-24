@@ -7,6 +7,24 @@ import {
   MessagesPlaceholder,
 } from "@langchain/core/prompts";
 
+export function generateSchemaPrompt(schema, depth = 0) {
+  let prompt = "";
+
+  schema.fields.forEach((field) => {
+    prompt += "  ".repeat(depth);
+    prompt += `- **${field.name}**: `;
+    if (field.fields) {
+      prompt += "A subgroup containing fields:\n";
+      prompt += generateSchemaPrompt(field, depth + 1);
+    } else {
+      prompt += `TYPE: ${field.type}`;
+      prompt += "\n";
+    }
+  });
+
+  return prompt;
+}
+
 export class BasePrompt {
   static projectId = process.env.REACT_APP_PROJECT_ID;
   static datasetId = process.env.REACT_APP_DATASET_ID;

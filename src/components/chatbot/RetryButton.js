@@ -21,13 +21,6 @@ export function RetryButton({ onRetry, dataStructure, query }) {
         </ClayToolbar.Nav>
       </ClayToolbar>
 
-      <div className="mb-2">
-        <Text>
-          Sorry, I couldn't find any data. You can retry or try a different
-          question.
-        </Text>
-      </div>
-
       <ClayButton
         aria-label="Retry"
         displayType="secondary"

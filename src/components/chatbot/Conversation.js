@@ -12,7 +12,7 @@ export function Conversation({ username, message, renderer }) {
             <ClayIcon symbol="ac-logo" />
           </div>
 
-          <div>
+          <div style={{ flex: 1 }}>
             {message && (
               <div
                 dangerouslySetInnerHTML={{

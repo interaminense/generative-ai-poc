@@ -3,7 +3,6 @@ import ClayButton from "@clayui/button";
 import ClayForm, { ClayInput } from "@clayui/form";
 import ClayLoadingIndicator from "@clayui/loading-indicator";
 import ClayIcon from "@clayui/icon";
-import ClayDropDown, { Align } from "@clayui/drop-down";
 
 function removePrePrompt(userPrompt) {
   const regex = /\/.*?:.*? /;
@@ -11,13 +10,7 @@ function removePrePrompt(userPrompt) {
   return userPrompt.replace(regex, "");
 }
 
-export function Input({
-  selectedCommand,
-  commands,
-  onCommandChange,
-  onSubmitPrompt,
-  loading,
-}) {
+export function Input({ onSubmitPrompt, loading }) {
   const [userPrompt, setUserPrompt] = useState("");
   const [previousUserPrompt, setPreviousUserPrompt] = useState("");
 
@@ -44,30 +37,10 @@ export function Input({
         }}
       >
         <ClayInput.Group>
-          <ClayInput.GroupItem shrink>
-            <ClayDropDown
-              trigger={
-                <ClayButton displayType="secondary">
-                  {selectedCommand.label} <ClayIcon symbol="caret-bottom" />
-                </ClayButton>
-              }
-              alignmentPosition={Align.TopLeft}
-            >
-              {commands.map((command) => (
-                <ClayDropDown.Item
-                  key={command.value}
-                  value={command.value}
-                  onClick={() => onCommandChange(command)}
-                >
-                  {command.label}
-                </ClayDropDown.Item>
-              ))}
-            </ClayDropDown>
-          </ClayInput.GroupItem>
           <ClayInput.GroupItem prepend>
             <ClayInput
               ref={inputRef}
-              placeholder={selectedCommand.inputDescription}
+              placeholder="Enter a prompt here"
               type="text"
               value={userPrompt}
               onChange={(e) => setUserPrompt(e.target.value)}
@@ -75,7 +48,7 @@ export function Input({
           </ClayInput.GroupItem>
           <ClayInput.GroupItem append shrink>
             <ClayButton
-              aria-label="Send Message"
+              aria-label="Send"
               type="submit"
               disabled={loading || !removePrePrompt(userPrompt)}
             >
@@ -84,7 +57,7 @@ export function Input({
               ) : (
                 <ClayIcon symbol="stars" className="d-inline-block mr-2" />
               )}
-              Send Message
+              Send
             </ClayButton>
           </ClayInput.GroupItem>
         </ClayInput.Group>
